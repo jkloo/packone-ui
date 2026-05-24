@@ -3,5 +3,6 @@
         "**/.vscode": true,
         "**/.yarn": true,
         "**/node_modules": true
-    }
+    },
+    "editor.tabSize": 2
 }
