@@ -3,6 +3,7 @@
 import { AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { Outlet } from "react-router";
+import { Header } from "./header/Header";
 
 export function Layout() {
 
@@ -11,15 +12,11 @@ export function Layout() {
     return (
         <AppShell
             header={{ height: 60 }}
-            navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
-            aside={{ width: 340, breakpoint: 'md', collapsed: { desktop: false, mobile: true } }}
             padding="md"
         >
         <AppShell.Header>
+          <Header/>
         </AppShell.Header>
-
-        <AppShell.Navbar py="md" px={4}>
-        </AppShell.Navbar>
 
         <Outlet/>
         
