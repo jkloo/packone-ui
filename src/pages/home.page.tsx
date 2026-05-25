@@ -1,6 +1,7 @@
 import { AppShell, Container, Text, Grid, Transition, Card, RingProgress, Box, Stack, Button, Space, LoadingOverlay, RollingNumber } from "@mantine/core";
 import { useAppStore } from "../store/store";
 import { CardImage } from "../components/card-image/CardImage";
+import { useEffect, useState } from "react";
 
 export function HomePage() {
   const cards = useAppStore((state) => state.cards)
@@ -44,27 +45,12 @@ function Status() {
   const fetch = useAppStore((state) => state.fetch)
   const loading = useAppStore((state) => state.loading)
 
-  function CountDown() {
-    return (
-      <RingProgress
-        thickness={8}
-        size={72}
-        sections={[{ value: 34, color: 'blue' }]}
-        label={
-          <Stack align="center">
-            <RollingNumber value={32} suffix="s" ta="center" fz="lg"  c="blue" fw={700} tabularNumbers/>
-          </Stack>
-        }
-      />
-    )
-  }
-
   return (
     <Card padding="sm" withBorder orientation="horizontal">
       <Card.Section inheritPadding px="xs" style={{ alignItems: 'center' }}>
         <Box pos="relative">
           <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ backgroundOpacity: 1 }} />
-          <CountDown/>  
+          <CountDown start={new Date()} expiration={new Date()}/>  
         </Box>
       </Card.Section>
       <Card.Section inheritPadding px="xs" style={{ alignContent: 'center' }}>
@@ -73,8 +59,42 @@ function Status() {
       </Card.Section>
       <Space w="auto" />
       <Card.Section inheritPadding px="md" style={{ alignItems: 'center', justifyContent: 'flex-end' }} display={'flex'} flex={1}>
-        <Button onClick={fetch}>New Pack</Button>
+        <Button onClick={fetch} disabled={loading}>New Pack</Button>
       </Card.Section>
     </Card>
+  )
+}
+
+interface CountDownProps {
+  start: Date
+  expiration: Date
+}
+
+function CountDown({ start, expiration }: CountDownProps) {
+  const [minutes, setMinutes] = useState<number>(0)
+  const [seconds, setSeconds] = useState<number>(0)
+  const [unit, setUnit] = useState<'s'|'m'>('m')
+
+  useEffect(() => {
+    if (start) {
+        const secondsLeft = setInterval(() => {
+            setSeconds(1)
+        }, 1000);
+        return () => clearInterval(secondsLeft);
+    }
+    // we keep track when to rerender the hook, aka when the start is changed to true
+  }, [start]);
+
+  return (
+    <RingProgress
+      thickness={8}
+      size={72}
+      sections={[{ value: 34, color: 'blue' }]}
+      label={
+        <Stack align="center">
+          <RollingNumber value={seconds} suffix={unit} ta="center" fz="lg"  c="blue" fw={700} tabularNumbers/>
+        </Stack>
+      }
+    />
   )
 }
