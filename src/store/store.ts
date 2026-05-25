@@ -4,6 +4,7 @@ import { combine } from 'zustand/middleware'
 import { Store } from '.'
 import { CardFlattened } from '../models/card-flattened'
 import { getPack } from '../api/endpoint';
+import { APIResponse } from '../api/models';
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -17,13 +18,14 @@ export const useAppStore = create<Store>(combine(
   (set) => ({
     fetch: async () => {
       set(() => ({ loading: true }))
-      await delay(1500)
-      
+      await delay(1000)
       const response = await getPack()
-
-      set(
-        () => ({ ...response, loading: false })
-      )
+      set(() => ({ ...response, loading: false }))
+    },
+    update: async (response: APIResponse) => {
+      set(() => ({ loading: true }))
+      await delay(1000)
+      set(() => ({ ...response, loading: false }))
     }
   })
 ))

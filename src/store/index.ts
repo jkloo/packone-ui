@@ -1,3 +1,4 @@
+import { APIResponse } from "../api/models"
 import { CardFlattened } from "../models/card-flattened"
 
 export interface Store {
@@ -6,4 +7,5 @@ export interface Store {
     created: Date | null
     expires: Date | null
     fetch: () => Promise<void>
+    update: (response: APIResponse) => Promise<void>
 }

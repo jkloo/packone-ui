@@ -2,8 +2,10 @@ import { AppShell, Container, Text, Grid, Transition, Card, RingProgress, Box, S
 import { useAppStore } from "../store/store";
 import { CardImage } from "../components/card-image/CardImage";
 import { useEffect, useState } from "react";
+import { service } from '../api/websocket'
 
 export function HomePage() {
+  service
   const cards = useAppStore((state) => state.cards)
   const loading = useAppStore((state) => state.loading)
 
